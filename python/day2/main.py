@@ -20,10 +20,20 @@ class game() :
         self.id = 0
         self.data = ""
         self.rolls = []
+        self.power = 1
         self.colors = {
-            "red": True,
-            "blue": True,
-            "green": True
+            "red": {
+                "status": True,
+                "count": 0,
+            },
+            "green": {
+                "status": True,
+                "count": 0,
+            },
+            "blue": {
+                "status": True,
+                "count": 0,
+            },
         }
 
     @staticmethod
@@ -45,14 +55,10 @@ class game() :
                 return self.find_number(roll)
         return 0
 
-
-
-
-
-
 if __name__ ==  "__main__":
 
     list_of_games = []
+    list_of_valid_games = []
     colors = {
         'red': 12,
         'green': 13,
@@ -60,10 +66,12 @@ if __name__ ==  "__main__":
     }
     file_data = read_file("dataset.txt")
 
-    total = 0
+    total_id = 0
+    total_power = 0
 
     for data in file_data:
         my_game = game()
+        list_of_games.append(my_game)
         my_game.data = data
         my_game.set_game_id()
         my_game.find_rolls()
@@ -74,13 +82,24 @@ if __name__ ==  "__main__":
                 value = my_game.find_color_in_roll(color, roll)
                 #print(f"GAME {my_game.id}\n\tROLL\t{roll}\n\tCOLOR\t{color}\n\t\tFOUND {value} MAX IS {max_val}")
                 if value > max_val:
-                    my_game.colors[color] = False
+                    my_game.colors[color]["status"] = False
+                if value > my_game.colors[color]["count"]:
+                    my_game.colors[color]["count"] = value
+        for color in my_game.colors.values():
+            print(f"Game {my_game.id} got power of {my_game.power}")
+            my_game.power *= color["count"]
 
-        list_of_games.append(my_game)
+        list_of_valid_games.append(my_game)
 
-    for game in list_of_games:
-        if all(value for value in game.colors.values()):
-            print(f"Game {game.id} is valid.")
-            total = total + game.id
+    for my_game in list_of_valid_games:
+        if all(color["status"] for color in my_game.colors.values()):
+            print(f"Game {my_game.id} is valid.")
+            total_id = total_id + my_game.id
 
-    print(total)
+    for my_game in list_of_games:
+        total_power = total_power + my_game.power
+
+        
+
+    print(total_id)
+    print(total_power)
