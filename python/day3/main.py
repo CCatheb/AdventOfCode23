@@ -41,16 +41,66 @@ The actions to perform are the following:
 
 """
 
-
-
 def read_file(path: str) -> list :
     with open(path, 'r') as f:
         return f.readlines()
 
 
+class char():
 
+    x = 0
+    y = 0
+    value = ""
+
+    def __init__(self, x, y, value) -> None:
+        self.x = x
+        self.y = y
+        self.value = value
+
+    def get_coordinates(self):
+        return (self.x, self.y)
+
+    def get_value(self):
+        return self.value
+
+    def set_x(self, x):
+        self.x = x
+
+    def set_y(self, y):
+        self.y = y
+
+    def set_value(self, value):
+        self.value = str(value)
+
+    def is_value_an_int(self):
+        try:
+            int(self.value)
+            return True
+        except ValueError:
+            return False
 
 if __name__ == "__main__":
 
     data = read_file("dataset.txt")
-    print(data[0])
+
+    # Clear the data, remove the \n
+    for i in range(len(data)):
+        data[i] = data[i].strip()
+    
+    char_data = []
+
+    # This first loop goes through all the lines
+    for i in range(len(data)):
+
+        line = data[i]
+        line_data = []
+
+        # This second loop goes through the string itself, and
+        # instanciates an item for each character encoutered.
+        for j in range(len(line)):
+            item = char(i,j,line[j])
+            line_data.append(item)
+
+        char_data.append(line_data)
+
+    print(char_data[0][0].is_value_an_int())
